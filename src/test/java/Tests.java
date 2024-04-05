@@ -9,6 +9,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +19,15 @@ public class Tests {
     WebDriver _globalDriverFull;
     String _email = new String();
     String _password = new String();
+
+    public static boolean isElementPresent(WebDriver driver, By by) {
+        try {
+            WebElement element = driver.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 
     @BeforeClass
     public static String generateRandomEmail() {
@@ -81,9 +92,8 @@ public class Tests {
 
     }
 
-    @Test//
+    @Test//Add to cart function
     public static void testTC0101() {
-
         WebElement resultBackpack = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/a/div"));
         String backpack = resultBackpack.getText();
         WebElement resultBikeLight = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]/a/div"));
@@ -96,7 +106,13 @@ public class Tests {
         String onesie = resultOnesie.getText();
         WebElement resultRedTshirt = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[6]/div[2]/div[1]/a/div"));
         String redTshirt = resultRedTshirt.getText();
-
+        String linkText = "nothing";
+        boolean backpackCart = false;
+        boolean bikeLightCart = false;
+        boolean tshirtCart = false;
+        boolean jacketCart = false;
+        boolean onesieCart = false;
+        boolean redTshirtCart = false;
 
         _globalDriver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();//Backpack in cart
         _globalDriver.findElement(By.id("add-to-cart-sauce-labs-bike-light")).click();//Bike Light in cart
@@ -105,24 +121,189 @@ public class Tests {
         _globalDriver.findElement(By.id("add-to-cart-sauce-labs-onesie")).click();//Onesie in cart
         _globalDriver.findElement(By.id("add-to-cart-test.allthethings()-t-shirt-(red)")).click();//T-shirt (Red) in cart
         _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open cart
-        for (int i = 3; i <= 9; i++) {
-            String link = "/html/body/div/div/div/div[2]/div/div[1]/div[" + i + "]/div[2]/a/div";
-            WebElement resultText = _globalDriver.findElement(By.xpath(link));
-            String linkText = resultText.getText();
-            if (linkText.contains(backpack)) {
-                System.out.println("Backpack is in cart");
-            } else if (linkText.contains(bikeLight)) {
-                System.out.println("Bike Light is in cart");
-            } else if (linkText.contains(tshirt)) {
-                System.out.println("Bolt T-shirt is in cart");
-            } else if (linkText.contains(jacket)) {
-                System.out.println("Fleece Jacket is in cart");
-            } else if (linkText.contains(onesie)) {
-                System.out.println("Onesie is in cart");
-            } else if (linkText.contains(redTshirt)) {
-                System.out.println("T-shirt (Red) is in cart");
-            }
+        var allElementsInCart = _globalDriver.findElements(By.className("inventory_item_name"));//finds all elements from class "inventory_item_name" that are in cart
+        for(var x : allElementsInCart)//prints names of all elements that are in class "inventory_item_name"
+        {
+            System.out.println(x.getText());
         }
+
+//        for (int i = 3; i < 9; i++) {
+//            String link = "/html/body/div/div/div/div[2]/div/div[1]/div[" + i + "]/div[2]/a/div";//Products name in cart
+//            boolean productExists = isElementPresent(_globalDriver,By.xpath(link));
+//            Assert.assertEquals(productExists,false);}
+
+//            try {
+//                WebElement resultText = _globalDriver.findElement(By.xpath(link));//get the name of first product in cart
+//                linkText = resultText.getText();
+//            } catch (Exception e) {
+//                continue;
+//            }
+//
+//            if (linkText.contains(backpack)) {
+//                backpackCart = true;
+//            } else if (linkText.contains(bikeLight)) {
+//                bikeLightCart = true;
+//            } else if (linkText.contains(tshirt)) {
+//                tshirtCart = true;
+//            } else if (linkText.contains(jacket)) {
+//                jacketCart = true;
+//            } else if (linkText.contains(onesie)) {
+//                onesieCart = false;
+//            } else if (linkText.contains(redTshirt)) {
+//                redTshirtCart = false;
+//            }
+//        }
+        if (backpackCart = false){
+            System.out.println("Backpack is not in the cart");}
+        if (bikeLightCart = false){
+            System.out.println("Bike Light is not in the cart");}
+        if (tshirtCart = false){
+        System.out.println("Bolt T-shirt is not in the cart");}
+        if (jacketCart = false){
+            System.out.println("Fleece Jacket is not in the cart");}
+        if (onesieCart = false){
+           System.out.println("Onesie is not in the cart");}
+        if (redTshirtCart = false){
+            System.out.println("T-shirt (Red) is not in the cart");}
+    }
+
+    @Test//Backpack description
+        public static void testTC0201() {
+            WebElement resultBackpack = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/a/div"));
+            String backpack = resultBackpack.getText();
+            _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[1]/a/div")).click();
+            WebElement resultAboutBackpack = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div[2]/div[1]"));
+            String aboutBackpack = resultAboutBackpack.getText();
+            Assert.assertEquals(backpack, aboutBackpack);
+            _globalDriver.close();
+        }
+
+        @Test//Bike Light description
+    public static void testTC0202() {
+        WebElement resultBikeLight = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]/a/div"));
+        String bikeLight = resultBikeLight.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[2]/div[2]/div[1]/a/div")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div[2]/div[1]"));
+        String aboutBikeLight = result.getText();
+        Assert.assertEquals(bikeLight, aboutBikeLight);
+        _globalDriver.close();
+    }
+
+    @Test//Tshirt description
+    public static void testTC0203() {
+        WebElement resultTshirt = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[3]/div[2]/div[1]/a/div"));
+        String tshirt = resultTshirt.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[3]/div[2]/div[1]/a/div")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div[2]/div[1]"));
+        String aboutTshirt = result.getText();
+        Assert.assertEquals(tshirt, aboutTshirt);
+        _globalDriver.close();
+    }
+
+    @Test//Jacket description
+    public static void testTC0204() {
+        WebElement resultJacket = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[4]/div[2]/div[1]/a/div"));
+        String jacket = resultJacket.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[4]/div[2]/div[1]/a/div")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div[2]/div[1]"));
+        String aboutJacket = result.getText();
+        Assert.assertEquals(jacket, aboutJacket);
+        _globalDriver.close();
+    }
+
+    @Test//Onesie description
+    public static void testTC0205() {
+        WebElement resultOnesie = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[5]/div[2]/div[1]/a/div"));
+        String onesie = resultOnesie.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[5]/div[2]/div[1]/a/div")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div[2]/div[1]"));
+        String aboutOnesie = result.getText();
+        Assert.assertEquals(onesie, aboutOnesie);
+        _globalDriver.close();
+    }
+
+    @Test//Red Tshirt description
+    public static void testTC0206() {
+        WebElement resultRedTshirt = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[6]/div[2]/div[1]/a/div"));
+        String redTshirt = resultRedTshirt.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[6]/div[2]/div[1]/a/div")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div[2]/div[1]"));
+        String aboutRedTshirt = result.getText();
+        Assert.assertEquals(redTshirt, aboutRedTshirt);
+        _globalDriver.close();
+    }
+    @Test//Backpack price in cart
+    public static void testTC0301() {
+        _globalDriver.findElement(By.id("add-to-cart-sauce-labs-backpack")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[1]/div[2]/div[2]/div"));
+        String itemPrice = result.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open the cart
+        WebElement result1 = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div[2]/div"));//find the item price in cart
+        String cartPrice = result1.getText();
+        Assert.assertEquals(cartPrice, itemPrice);
+        _globalDriver.close();
+    }
+
+    @Test//Bike Light price in cart
+    public static void testTC0302() {
+        _globalDriver.findElement(By.id("add-to-cart-sauce-labs-bike-light")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[2]/div[2]/div[2]/div"));
+        String itemPrice = result.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open the cart
+        WebElement result1 = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div[2]/div"));//find the item price in cart
+        String cartPrice = result1.getText();
+        Assert.assertEquals(cartPrice, itemPrice);
+        _globalDriver.close();
+    }
+
+    @Test//Bolt T-shirt price in cart
+    public static void testTC0303() {
+        _globalDriver.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[3]/div[2]/div[2]/div"));
+        String itemPrice = result.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open the cart
+        WebElement result1 = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div[2]/div"));//find the item price in cart
+        String cartPrice = result1.getText();
+        Assert.assertEquals(cartPrice, itemPrice);
+        _globalDriver.close();
+    }
+
+    @Test//Fleece Jacket price in cart
+    public static void testTC0304() {
+        _globalDriver.findElement(By.id("add-to-cart-sauce-labs-fleece-jacket")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[4]/div[2]/div[2]/div"));
+        String itemPrice = result.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open the cart
+        WebElement result1 = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div[2]/div"));//find the item price in cart
+        String cartPrice = result1.getText();
+        Assert.assertEquals(cartPrice, itemPrice);
+        _globalDriver.close();
+    }
+
+    @Test//Onesie price in cart
+    public static void testTC0305() {
+        _globalDriver.findElement(By.id("add-to-cart-sauce-labs-onesie")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[5]/div[2]/div[2]/div"));
+        String itemPrice = result.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open the cart
+        WebElement result1 = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div[2]/div"));//find the item price in cart
+        String cartPrice = result1.getText();
+        Assert.assertEquals(cartPrice, itemPrice);
+        _globalDriver.close();
+    }
+
+    @Test//Red T-Shirt price in cart
+    public static void testTC0306() {
+        _globalDriver.findElement(By.id("add-to-cart-test.allthethings()-t-shirt-(red)")).click();
+        WebElement result = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div/div/div[6]/div[2]/div[2]/div"));
+        String itemPrice = result.getText();
+        _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[1]/div[1]/div[3]/a")).click();//open the cart
+        WebElement result1 = _globalDriver.findElement(By.xpath("/html/body/div/div/div/div[2]/div/div[1]/div[3]/div[2]/div[2]/div"));//find the item price in cart
+        String cartPrice = result1.getText();
+        Assert.assertEquals(cartPrice, itemPrice);
+        _globalDriver.close();
+    }
+
 
 
 //        @Test//open the Backpack description
@@ -132,5 +313,5 @@ public class Tests {
 //            Assert.assertEquals(resultText, "Sauce Labs Backpack");
 //            _globalDriver.close();
 //        }
-    }
+
 }
