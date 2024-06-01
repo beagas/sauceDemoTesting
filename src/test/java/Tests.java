@@ -139,6 +139,8 @@ public class Tests {
 //                continue;
 //            }
 //
+       // backpackCart = linkText.contains(backpack);
+
 //            if (linkText.contains(backpack)) {
 //                backpackCart = true;
 //            } else if (linkText.contains(bikeLight)) {
