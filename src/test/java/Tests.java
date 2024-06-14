@@ -48,7 +48,7 @@ public class Tests {
         // Adding '@' symbol
         email.append("@");
 
-        // Selecting random domain
+        // Selecting random domainnn
         String randomDomain = domains[random.nextInt(domains.length)];
         email.append(randomDomain);
 
